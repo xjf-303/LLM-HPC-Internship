@@ -1,0 +1,15 @@
+# site_name: My Docs
+site_name: LLM HPC Internship Notes
+
+theme:
+  name: material
+  language: zh
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - content.code.copy
+
+markdown_extensions:
+  - admonition
+  - pymdownx.superfences
+  - pymdownx.highlight
