@@ -1,17 +1,7 @@
-# Welcome to MkDocs
+# LLM HPC 实习笔记
 
-For full documentation visit [mkdocs.org](https://www.mkdocs.org).
+记录我在大模型高性能计算方向实习期间的学习、问题与工程思考。
 
-## Commands
+## 笔记目录
 
-* `mkdocs new [dir-name]` - Create a new project.
-* `mkdocs serve` - Start the live-reloading docs server.
-* `mkdocs build` - Build the documentation site.
-* `mkdocs -h` - Print help message and exit.
-
-## Project layout
-
-    mkdocs.yml    # The configuration file.
-    docs/
-        index.md  # The documentation homepage.
-        ...       # Other markdown pages, images and other files.
+- [Day 0｜MkDocs + GitHub Pages 搭建记录](day0.md)
