@@ -1,0 +1,1001 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="..">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>实习笔记 Day 0｜MkDocs + GitHub Pages 搭建记录 - LLM HPC Internship Notes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.618322db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#day-0mkdocs-github-pages" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href=".." title="LLM HPC Internship Notes" class="md-header__button md-logo" aria-label="LLM HPC Internship Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            LLM HPC Internship Notes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              实习笔记 Day 0｜MkDocs + GitHub Pages 搭建记录
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  LLM HPC 实习笔记
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
+        
+  
+  
+    
+  
+  实习笔记 Day 0｜MkDocs + GitHub Pages 搭建记录
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="LLM HPC Internship Notes" class="md-nav__button md-logo" aria-label="LLM HPC Internship Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    LLM HPC Internship Notes
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM HPC 实习笔记
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    实习笔记 Day 0｜MkDocs + GitHub Pages 搭建记录
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    实习笔记 Day 0｜MkDocs + GitHub Pages 搭建记录
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        一、为什么要在实习前搭建一个笔记网站？
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        二、整体技术方案
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        三、仓库为什么需要两个分支？
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="三、仓库为什么需要两个分支？">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-main-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. main 分支：源内容（Source）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-gh-pages-artifact" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. gh-pages 分支：发布产物（Artifact）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#site-track" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        四、为什么 site/ 目录不需要 track？
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        五、遇到的核心问题与排查过程
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="五、遇到的核心问题与排查过程">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1mkdocs-gh-deploy-404" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        问题 1：mkdocs gh-deploy 成功，但页面 404
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        排查思路
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#github-pages-gh-pages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        六、真正的原因：GitHub Pages 没指向 gh-pages
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        七、最终形成的稳定发布流程
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="七、最终形成的稳定发布流程">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        日常写作（服务器 / 本地都可以）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        构建 + 发布
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        页面访问
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        八、这件事带给我的工程认知
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        九、结语
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        一、为什么要在实习前搭建一个笔记网站？
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        二、整体技术方案
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        三、仓库为什么需要两个分支？
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="三、仓库为什么需要两个分支？">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-main-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. main 分支：源内容（Source）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-gh-pages-artifact" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. gh-pages 分支：发布产物（Artifact）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#site-track" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        四、为什么 site/ 目录不需要 track？
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        五、遇到的核心问题与排查过程
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="五、遇到的核心问题与排查过程">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1mkdocs-gh-deploy-404" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        问题 1：mkdocs gh-deploy 成功，但页面 404
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        排查思路
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#github-pages-gh-pages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        六、真正的原因：GitHub Pages 没指向 gh-pages
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        七、最终形成的稳定发布流程
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="七、最终形成的稳定发布流程">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        日常写作（服务器 / 本地都可以）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        构建 + 发布
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        页面访问
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        八、这件事带给我的工程认知
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        九、结语
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="day-0mkdocs-github-pages">实习笔记 Day 0｜MkDocs + GitHub Pages 搭建记录</h1>
+<blockquote>
+<p>关键词：MkDocs / GitHub Pages / gh-pages / 工程化部署 / 踩坑记录</p>
+</blockquote>
+<p>在正式开始大模型高性能计算方向的实习之前，我决定先搭建一个<strong>长期维护的个人技术笔记网站</strong>，用于记录实习期间每天的学习内容、问题与思考。</p>
+<p>这篇笔记完整记录了：</p>
+<ul>
+<li>我为什么选择 MkDocs + GitHub Pages</li>
+<li>在实际搭建过程中遇到的问题</li>
+<li>每个问题背后的工程原因</li>
+<li>最终形成的一套<strong>稳定、可复用的发布流程</strong></li>
+</ul>
+<p>这也是本仓库的 <strong>第一篇正式笔记（Day 0）</strong>。</p>
+<hr />
+<h2 id="_1">一、为什么要在实习前搭建一个笔记网站？</h2>
+<p>我即将入职的大模型「高性能计算方向」实习，工作内容涉及：</p>
+<ul>
+<li>GPU 计算与资源调度</li>
+<li>NCCL / MPI 等分布式通信</li>
+<li>大模型训练框架（DeepSpeed / Megatron-LM）</li>
+</ul>
+<p>这些内容具有几个特点：</p>
+<ul>
+<li>信息密度高</li>
+<li>问题高度工程化</li>
+<li>很多坑只在<strong>真实实践中出现</strong></li>
+</ul>
+<p>因此我希望：</p>
+<blockquote>
+<p>把“每天遇到的问题 + 解决过程”系统性沉淀下来，而不是零散地记在本地。</p>
+</blockquote>
+<p>选择「静态网站 + GitHub Pages」有几个优势：</p>
+<ul>
+<li>不需要服务器</li>
+<li>版本可追溯</li>
+<li>内容天然工程化</li>
+</ul>
+<hr />
+<h2 id="_2">二、整体技术方案</h2>
+<p>最终采用的方案是：</p>
+<div class="highlight"><pre><span></span><code>Markdown（源内容）
+        ↓
+MkDocs（静态站点生成）
+        ↓
+gh-pages 分支（HTML 产物）
+        ↓
+GitHub Pages（对外访问）
+</code></pre></div>
+<p>核心工具：</p>
+<ul>
+<li><strong>MkDocs</strong>：将 Markdown 转为静态站点</li>
+<li><strong>GitHub Pages</strong>：托管静态网页</li>
+<li><strong>gh-pages 分支</strong>：专门存放发布产物</li>
+</ul>
+<hr />
+<h2 id="_3">三、仓库为什么需要两个分支？</h2>
+<p>这是我在搭建过程中第一个真正「工程化」的问题。</p>
+<h3 id="1-main-source">1. main 分支：源内容（Source）</h3>
+<div class="highlight"><pre><span></span><code>mkdocs.yml
+docs/
+  index.md
+  day0.md
+</code></pre></div>
+<ul>
+<li>人写的 Markdown</li>
+<li>可维护、可 review</li>
+<li>是唯一的“事实来源（source of truth）”</li>
+</ul>
+<h3 id="2-gh-pages-artifact">2. gh-pages 分支：发布产物（Artifact）</h3>
+<div class="highlight"><pre><span></span><code>index.html
+assets/
+search/
+sitemap.xml
+</code></pre></div>
+<ul>
+<li>MkDocs 自动生成</li>
+<li>给浏览器 / CDN 用</li>
+<li><strong>不手动维护</strong></li>
+</ul>
+<blockquote>
+<p>这和 CUDA 工程里 <code>.cu</code> 与 <code>.cubin</code> 的关系是完全一致的。</p>
+</blockquote>
+<hr />
+<h2 id="site-track">四、为什么 <code>site/</code> 目录不需要 track？</h2>
+<p>在本地构建时，会生成一个 <code>site/</code> 目录：</p>
+<div class="highlight"><pre><span></span><code>site/
+  index.html
+  assets/
+</code></pre></div>
+<p>但这个目录：</p>
+<ul>
+<li>每次构建都会变</li>
+<li>内容完全由 <code>docs/</code> 推导</li>
+<li>无法反向维护</li>
+</ul>
+<p>因此它的工程地位等同于：</p>
+<div class="highlight"><pre><span></span><code>build/
+dist/
+__pycache__/
+</code></pre></div>
+<p><strong>结论：<code>site/</code> 不应该加入 git 管理。</strong></p>
+<hr />
+<h2 id="_4">五、遇到的核心问题与排查过程</h2>
+<h3 id="1mkdocs-gh-deploy-404">问题 1：mkdocs gh-deploy 成功，但页面 404</h3>
+<div class="highlight"><pre><span></span><code>Your documentation should shortly be available at:
+https://xjf-303.github.io/LLM-HPC-Internship/
+</code></pre></div>
+<p>但访问后却是：</p>
+<div class="highlight"><pre><span></span><code>404 File not found
+</code></pre></div>
+<h3 id="_5">排查思路</h3>
+<ol>
+<li>确认 <code>docs/index.md</code> 存在</li>
+<li>确认 <code>mkdocs.yml</code> 配置正确</li>
+<li>切换到 gh-pages 分支查看内容</li>
+</ol>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>checkout<span class="w"> </span>gh-pages
+ls
+</code></pre></div>
+<p>发现：</p>
+<div class="highlight"><pre><span></span><code>index.html
+assets/
+</code></pre></div>
+<p>👉 <strong>说明构建和 push 都是成功的</strong></p>
+<hr />
+<h2 id="github-pages-gh-pages">六、真正的原因：GitHub Pages 没指向 gh-pages</h2>
+<p>GitHub Pages 并不会自动识别 MkDocs。</p>
+<p>它只认：</p>
+<ul>
+<li>哪个分支？</li>
+<li>哪个目录？</li>
+<li>是否存在 <code>index.html</code></li>
+</ul>
+<p>最终正确配置是：</p>
+<div class="highlight"><pre><span></span><code>Settings → Pages
+Source: Deploy from a branch
+Branch: gh-pages
+Folder: / (root)
+</code></pre></div>
+<blockquote>
+<p>注意：这里的 <code>/ (root)</code> 指的是 <strong>gh-pages 分支的根目录</strong>，
+而不是 main 分支中的某个文件夹。</p>
+</blockquote>
+<hr />
+<h2 id="_6">七、最终形成的稳定发布流程</h2>
+<h3 id="_7">日常写作（服务器 / 本地都可以）</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># 编辑 Markdown</span>
+docs/day0.md
+</code></pre></div>
+<h3 id="_8">构建 + 发布</h3>
+<div class="highlight"><pre><span></span><code>mkdocs<span class="w"> </span>gh-deploy
+</code></pre></div>
+<h3 id="_9">页面访问</h3>
+<div class="highlight"><pre><span></span><code>https://xjf-303.github.io/LLM-HPC-Internship/
+</code></pre></div>
+<hr />
+<h2 id="_10">八、这件事带给我的工程认知</h2>
+<p>这次搭建网站，其实提前帮我踩了一次<strong>真实工程问题</strong>：</p>
+<ul>
+<li>构建成功 ≠ 服务可用</li>
+<li>产物存在 ≠ 路由正确</li>
+<li>工具没错 ≠ 配置没错</li>
+</ul>
+<p>这和未来在大模型 / HPC 工程中会遇到的：</p>
+<ul>
+<li>NCCL 拓扑配置</li>
+<li>GPU 资源调度</li>
+<li>分布式训练启动</li>
+</ul>
+<p>本质是同一类问题。</p>
+<hr />
+<h2 id="_11">九、结语</h2>
+<p>这是我的第一篇实习前笔记。
+希望在实习结束时，这个仓库能成为一份<strong>完整的工程成长记录</strong>。</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "content.code.copy"], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+    
+  </body>
+</html>
