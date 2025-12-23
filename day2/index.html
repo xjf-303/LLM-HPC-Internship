@@ -9,10 +9,8 @@
       
       
       
-        <link rel="prev" href="../day0/">
+        <link rel="prev" href="../day1/">
       
-      
-        <link rel="next" href="../day2/">
       
       
         
@@ -23,7 +21,7 @@
     
     
       
-        <title>Day1 - LLM HPC Internship Notes</title>
+        <title>实习笔记 Day 2｜torch_memory_saver仓库 + vllm sleep mode - LLM HPC Internship Notes</title>
       
     
     
@@ -64,7 +62,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#_1" class="md-skip">
+        <a href="#day-2torch_memory_saver-vllm-sleep-mode" class="md-skip">
           跳转至
         </a>
       
@@ -98,7 +96,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Day1
+              实习笔记 Day 2｜torch_memory_saver仓库 + vllm sleep mode
             
           </span>
         </div>
@@ -207,11 +205,9 @@
   
   
   
-    
   
-  
-    <li class="md-tabs__item md-tabs__item--active">
-      <a href="./" class="md-tabs__link">
+    <li class="md-tabs__item">
+      <a href="../day1/" class="md-tabs__link">
         
   
   
@@ -228,9 +224,11 @@
   
   
   
+    
   
-    <li class="md-tabs__item">
-      <a href="../day2/" class="md-tabs__link">
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
         
   
   
@@ -334,19 +332,10 @@
       
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../day1/" class="md-nav__link">
         
   
   
@@ -362,7 +351,6 @@
   
 
       </a>
-      
     </li>
   
 
@@ -371,10 +359,37 @@
       
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../day2/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    实习笔记 Day 2｜torch_memory_saver仓库 + vllm sleep mode
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -390,6 +405,115 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#torch_memory_saver" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        一. torch_memory_saver
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="一. torch_memory_saver">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#torch_memory_saver-cuda" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        torch_memory_saver是一个开源的高性能 CUDA 内存管理工具：
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        核心机制
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        虚拟地址保持 vs 数据保持
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sleep-vs-no-sleep" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        二. sleep VS no sleep
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="二. sleep VS no sleep">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#qa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        QA
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#todo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TODO
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -414,6 +538,103 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#torch_memory_saver" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        一. torch_memory_saver
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="一. torch_memory_saver">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#torch_memory_saver-cuda" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        torch_memory_saver是一个开源的高性能 CUDA 内存管理工具：
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        核心机制
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        虚拟地址保持 vs 数据保持
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sleep-vs-no-sleep" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        二. sleep VS no sleep
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="二. sleep VS no sleep">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#qa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        QA
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#todo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TODO
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -429,138 +650,38 @@
 
 
 
-<p>🎯 核心目标：VLLM在线模式冷启动性能测试与优化
-📋 目录
-Docker容器操作</p>
-<p>VLLM服务部署</p>
-<p>冷启动测试</p>
-<p>日志分析</p>
-<p>核心概念</p>
-<p>问题与解决</p>
-<p>今日Prompt记录</p>
-<p>🐳 Docker容器操作
-常用命令
-bash</p>
-<h1 id="_1">容器创建与运行</h1>
-<p>docker run -d --name vllm-container --gpus all -p 8000:8000 镜像名</p>
-<h1 id="_2">进入容器</h1>
-<p>docker exec -it vllm-container bash</p>
-<h1 id="_3">日志查看</h1>
-<p>docker logs -f vllm-container</p>
-<h1 id="_4">停止与删除</h1>
-<p>docker stop vllm-container
-docker rm vllm-container
-解决"stopped jobs"问题
-bash
-jobs -l    # 查看暂停的作业
-fg %1      # 恢复作业到前台
-kill %1    # 终止作业
-exit       # 再次退出
-🚀 VLLM服务部署
-带休眠模式的服务启动
-bash
-export CUDA_VISIBLE_DEVICES="6"
-export VLLM_SERVER_DEV_MODE=1
-vllm serve /mnt/cfs/jingfxiong/models--Qwen--Qwen3-8B \
-  --enable-sleep-mode \
-  --port 8002 \
-  2&gt;&amp;1 | tee server.log
-日志同时输出到终端和文件
-bash</p>
-<h1 id="tee">使用tee命令</h1>
-<p>python script.py 2&gt;&amp;1 | tee output.log</p>
-<h1 id="_5">追加模式</h1>
-<p>python script.py 2&gt;&amp;1 | tee -a output.log
-⏱️ 冷启动测试
-测试步骤
-初始冷启动：从零启动服务，记录总时间</p>
-<p>休眠测试：让服务进入休眠状态，测量休眠时间</p>
-<p>唤醒测试：唤醒服务，测量恢复时间</p>
-<p>重启对比：完全重启服务，对比性能差异</p>
-<p>API端点
-bash</p>
-<h1 id="_6">休眠控制</h1>
-<p>curl -X POST 'http://localhost:8002/sleep?level=1'
-curl -X POST 'http://localhost:8002/wake_up'
-curl 'http://localhost:8002/is_sleeping'</p>
-<h1 id="_7">健康检查</h1>
-<p>curl 'http://localhost:8002/health'</p>
-<h1 id="_8">推理请求</h1>
-<p>curl -X POST http://localhost:8002/v1/completions \
-  -H "Content-Type: application/json" \
-  -d '{"model":"Qwen3-8B","prompt":"Hello","max_tokens":10}'
-📊 日志分析结果
-关键时间节点（Qwen3-8B模型）
-阶段  耗时  说明
-总冷启动时间  96秒 从启动到服务完全就绪
-模型权重加载  51.36秒  主要瓶颈（占53.5%）
-CUDA图捕获 14秒 可复用优化
-引擎初始化   26.97秒  包含多个子过程
-进入休眠(level=1)   8.11秒   释放85.47GiB内存
-从休眠唤醒   0.32秒   CPU缓存有效
-性能对比
-首次冷启动：96秒</p>
-<p>休眠唤醒：8.11秒（休眠）+ 0.32秒（唤醒）= 8.43秒</p>
-<p>性能优势：完全重启耗时是休眠唤醒的 11.4倍</p>
-<p>🧠 核心概念
-VLLM两种运行模式
-离线（批量）模式：最大化吞吐量，适合批处理任务</p>
-<p>在线（交互式）模式：最小化延迟，适合API服务</p>
-<p>冷启动的5个成本项
-显存加载时间：权重复制到GPU</p>
-<p>内存分配器设置：CUDA分配器初始化</p>
-<p>CUDA图捕获：记录执行图</p>
-<p>GPU内核JIT编译：DeepGEMM、FlashInfer等</p>
-<p>缓存预热：首次请求开销</p>
-<p>休眠级别
-level=0：轻度休眠，仅释放KV Cache</p>
-<p>level=1：中度休眠，释放KV Cache和部分权重</p>
-<p>level=2：深度休眠，释放所有GPU内存到CPU</p>
-<p>❓ 问题与解决
-1. 服务启动后404问题
-问题：访问根路径 / 返回404
-原因：VLLM API服务器没有定义根路径
-解决：使用正确的API端点（如 /health、/v1/completions）</p>
-<ol>
-<li>容器内无法使用code命令
-问题：bash: code: command not found
-原因：容器内没有安装VSCode
-解决：</li>
-</ol>
-<p>bash</p>
-<h1 id="_9">使用容器内置编辑器</h1>
-<p>nano file.txt      # 简单编辑器
-vim file.txt       # 功能强大</p>
-<h1 id="_10">或复制到宿主机编辑</h1>
-<p>docker cp 容器名:/path/file.txt .</p>
-<h1 id="_11">编辑后复制回去</h1>
-<p>docker cp file.txt 容器名:/path/
-3. 工作目录不存在
-问题：使用-w /data但目录不存在
-解决：确保目录存在或通过挂载创建</p>
-<p>bash</p>
-<h1 id="1">方法1：提前创建目录</h1>
-<p>mkdir -p /data</p>
-<h1 id="2">方法2：通过挂载自动创建</h1>
-<p>docker run -v /host/data:/data ...
-📝 今日Prompt记录
-Docker相关
-"我使用ssh连接到一个容器中，现在想利用容器中已经拉取的镜像再创建一个新的容器，请问怎么操作"</p>
-<p>"docker run -d --name new_container your_image解析一下这条命令"</p>
-<p>"然后怎么连接我的容器，停止删除等常见操作"</p>
-<p>"退出不了容器" → 解决stopped jobs问题</p>
-<p>"为什么进入新创容器后自动进入这个文件夹，以及怎么打开查看该容器的文件"</p>
-<p>VLLM概念
-"介绍一下vllm冷启动"</p>
-<p>"vllm的offline和online模式解释"</p>
-<p>"在线模式下如何测试冷启动时间"</p>
-<p>"curl -X POST 'http://localhost:8002/sleep?level=1'解释这个命令的含义"</p>
-<p>日志与测试
-"代码执行结果输出到log"</p>
-<p>"怎么分析这个log得到冷启动花费的总时间和各个模块的时间"</p>
-<p>"修改分析log的代码，使其输出所有时间，然后通过缩进表示每个模块时间的包含关系"</p>
-<p>"这是我的开启睡眠模式的启动脚本，我想在服务开启后接着对比直接睡眠到唤醒相对于重新启动的时间优势，帮我补充脚本"</p>
-<p>"怎么用curl命令让启动的服务重启"</p>
+<h1 id="day-2torch_memory_saver-vllm-sleep-mode">实习笔记 Day 2｜torch_memory_saver仓库 + vllm sleep mode</h1>
+<h2 id="torch_memory_saver">一. torch_memory_saver</h2>
+<h3 id="torch_memory_saver-cuda">torch_memory_saver是一个开源的高性能 CUDA 内存管理工具：</h3>
+<p>暂停和恢复张量的cuda内存占用，保持用户的虚拟地址不变（应用程序无需修改指针引用），恢复后重新分配显存，绑定到虚拟地址上
+cuda虚拟内存管理api替代cudamalloc（cudaruntime api）（被拦截）比如malloc，free替代cudamalloc，cudafree
+vllm的sleep_mode除了将gpu内存释放，还实现了根据tag offload到cpu：
+kvcache的逻辑和torch_memory_saver一样。权重是vllm自身的offload逻辑：level1
+全部采用torch_memory_saver逻辑：level2</p>
+<h3 id="_1">核心机制</h3>
+<p>暂停（Pause）：释放GPU物理内存，但保留虚拟地址
+恢复（Resume）：分配新的物理内存，重新映射到原虚拟地址
+优势：应用程序指针引用无需修改，避免指针重定位开销</p>
+<h3 id="vs">虚拟地址保持 vs 数据保持</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># 暂停前：虚拟地址 0x1000 → 物理内存A [数据: 100]</span>
+<span class="c1"># 暂停后：虚拟地址 0x1000 → 无效（无物理映射）</span>
+<span class="c1"># 恢复后：虚拟地址 0x1000 → 物理内存B [随机值]</span>
+
+<span class="c1"># 关键：只保持内存位置，不保持数据内容！</span>
+<span class="c1"># 应用层需负责数据保存/恢复</span>
+</code></pre></div>
+<h2 id="sleep-vs-no-sleep">二. sleep VS no sleep</h2>
+<p>无sleep时，重新加载和初次加载耗时相同
+sleep时，模型切换而言（权重加载）：唤醒比重新加载快20倍。推理而言（预热+缓存预热+推理）：唤醒后首次推理比加载后首次推理快（唤醒后不需要再预热，每次加载后都需要重新预热：重启python进程和cuda上下文/重新初始化内存分配器/重新捕获cuda图/重新jit编译内核，所以也称为冷启动）</p>
+<h3 id="qa">QA</h3>
+<p>级别2为什么模型切换和首次推理都比冷启动快？：冷启动每次首次推理都包含了预热时间，级别2模型切换有保留虚拟地址的优势。
+级别1首次模型加载为什么比级别2快，级别2后续唤醒不需要预热，为什么快那么多，不是应该和首次加载时间（不含预热）一样吗：区别在于保留了虚拟地址</p>
+<h2 id="todo">TODO</h2>
+<p>vllm的各种加载相关的成本项分析
+vllm有用sglang的拦截吗？
+理解torch.compile和cuda_graph
+找到sleep模式重新唤醒时不需要预热（compile/cuda graph）的原因
+单卡切换和多卡切换对应的行为（单卡和多卡只够负载一个模型）（够负载多个模型）</p>
 
 
 
