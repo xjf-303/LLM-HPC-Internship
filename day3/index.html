@@ -1,0 +1,1144 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../day2/">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>实习笔记 Day 3｜torch.compile加速原理 - LLM HPC Internship Notes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.618322db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#day-3torchcompile" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href=".." title="LLM HPC Internship Notes" class="md-header__button md-logo" aria-label="LLM HPC Internship Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            LLM HPC Internship Notes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              实习笔记 Day 3｜torch.compile加速原理
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  LLM HPC 实习笔记
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../day0/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  实习笔记 Day 0｜MkDocs + GitHub Pages 搭建记录
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../day1/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Day1
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../day2/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  实习笔记 Day 2｜torch_memory_saver仓库 + vllm sleep mode
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
+        
+  
+  
+    
+  
+  实习笔记 Day 3｜torch.compile加速原理
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="LLM HPC Internship Notes" class="md-nav__button md-logo" aria-label="LLM HPC Internship Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    LLM HPC Internship Notes
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM HPC 实习笔记
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    实习笔记 Day 0｜MkDocs + GitHub Pages 搭建记录
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Day1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    实习笔记 Day 2｜torch_memory_saver仓库 + vllm sleep mode
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    实习笔记 Day 3｜torch.compile加速原理
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    实习笔记 Day 3｜torch.compile加速原理
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#torchcompile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        torch.compile
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="torch.compile">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        总览
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        必要性
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        性能收益
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#torchdynamofx-graph" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TorchDynamo生成fx graph
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="TorchDynamo生成fx graph">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        总览
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fx" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FX
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#torchdynamo-fx" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TorchDynamo 与 FX 的关系
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fx-graph-python-ir" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FX Graph 是 Python 级的 IR
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fx_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FX 是后续所有优化的基础
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cuda-graph" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        cuda graph
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="cuda graph">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fx-graph-cuda-graph" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FX Graph 和 CUDA Graph
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cumemallocator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CuMemAllocator
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="CuMemAllocator">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#5921m" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5921M显存的构成
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prompt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        参考&amp;&amp;prompt
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#todo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        todo
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#torchcompile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        torch.compile
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="torch.compile">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        总览
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        必要性
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        性能收益
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#torchdynamofx-graph" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TorchDynamo生成fx graph
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="TorchDynamo生成fx graph">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        总览
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fx" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FX
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#torchdynamo-fx" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TorchDynamo 与 FX 的关系
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fx-graph-python-ir" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FX Graph 是 Python 级的 IR
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fx_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FX 是后续所有优化的基础
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cuda-graph" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        cuda graph
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="cuda graph">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fx-graph-cuda-graph" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FX Graph 和 CUDA Graph
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cumemallocator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CuMemAllocator
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="CuMemAllocator">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#5921m" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5921M显存的构成
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prompt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        参考&amp;&amp;prompt
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#todo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        todo
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="day-3torchcompile">实习笔记 Day 3｜torch.compile加速原理</h1>
+<h2 id="torchcompile">torch.compile</h2>
+<h3 id="_1">总览</h3>
+<p>torch.compile = 用 Python tracing + 图断裂（graph break）+ 多级 IR + 后端代码生成，把 PyTorch 的 eager 执行“按需”变成接近静态图的执行，但仍保持 Python 语义。核心是不破坏 Python 动态语义的前提下，尽可能多地捕获稳定子图（stable subgraph）进行编译
+<div class="highlight"><pre><span></span><code><span class="n">Python</span> <span class="n">Code</span>
+   <span class="err">↓</span>
+<span class="n">TorchDynamo</span>   <span class="err">←——</span> <span class="n">捕获</span> <span class="n">Python</span> <span class="n">级计算图</span>
+   <span class="err">↓</span>
+<span class="n">AOTAutograd</span>   <span class="err">←——</span> <span class="n">前向</span> <span class="o">/</span> <span class="n">反向图拆分</span>
+   <span class="err">↓</span>
+<span class="n">TorchInductor</span> <span class="err">←——</span> <span class="n">lowering</span> <span class="o">+</span> <span class="n">kernel</span> <span class="n">codegen</span>
+   <span class="err">↓</span>
+<span class="n">CUDA</span> <span class="o">/</span> <span class="n">CPU</span> <span class="o">/</span> <span class="n">Triton</span>
+</code></pre></div></p>
+<h3 id="_2">必要性</h3>
+<p>算子调用流程
+- Python → C++ 的函数调用<br />
+- 参数解析和类型检查<br />
+- 分发到正确的 kernel 实现<br />
+- 提交到 CUDA stream  </p>
+<p>Eager 模式按算子边界执行，每一个op都要回到python;编译器看不到相邻算子之间的关系，算子之间无法融合;后端（cuda/cpu）不知道整体结构，也就无法做跨算子的优化</p>
+<h3 id="_3">性能收益</h3>
+<ul>
+<li>Python 调度 → 0</li>
+<li>kernel fusion → 数量级减少 launch</li>
+<li>Triton 自动生成高性能 kernel</li>
+</ul>
+<h2 id="torchdynamofx-graph">TorchDynamo生成fx graph</h2>
+<h3 id="_4">总览</h3>
+<p>TorchDynamo 把动态 Python 执行转换成 FX 这种统一的、可变换的计算图表示，而 AOTAutograd、Inductor 等所有编译优化，都是在这个 FX Graph 上完成的。</p>
+<h3 id="fx">FX</h3>
+<p>pytorch语境中FX=Functional Transformations，就是把 Python 函数 / nn.Module转（transform）成一个可被程序分析和修改的计算图。fx前的三种方案<br />
+方案              问题<br />
+eager Python    无图、不可分析<br />
+TorchScript     太严格、破坏 Python 语义<br />
+autograd graph  面向反向，不适合整体优化<br />
+因此FX的定位是介于 eager 和 TorchScript 之间的“可变换计算图表示”  </p>
+<h3 id="torchdynamo-fx">TorchDynamo 与 FX 的关系</h3>
+<p>TorchDynamo = 自动生成 FX Graph，它不是手写 symbolic_trace，而是：<br />
+在运行时拦截 Python bytecode，自动构建 FX Graph</p>
+<h3 id="fx-graph-python-ir">FX Graph 是 Python 级的 IR</h3>
+<p>FX Graph 不是“死 IR”，它是可执行 Python 对象（核心优势）
+<div class="highlight"><pre><span></span><code><span class="n">gm</span> <span class="o">=</span> <span class="n">symbolic_trace</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">gm</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>   <span class="c1"># 可以直接跑</span>
+</code></pre></div>
+一个完整的例子<br />
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch.fx</span><span class="w"> </span><span class="kn">import</span> <span class="n">symbolic_trace</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">original_function</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="n">z</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="k">return</span> <span class="n">w</span><span class="o">.</span><span class="n">relu</span><span class="p">()</span>
+
+<span class="c1"># 符号追踪</span>
+<span class="n">traced</span> <span class="o">=</span> <span class="n">symbolic_trace</span><span class="p">(</span><span class="n">original_function</span><span class="p">)</span>
+
+<span class="c1"># 查看图结构</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">traced</span><span class="o">.</span><span class="n">graph</span><span class="p">)</span>
+<span class="c1"># graph():</span>
+<span class="c1">#     %x : Tensor = placeholder[target=x]</span>
+<span class="c1">#     %y : Tensor = placeholder[target=y]</span>
+<span class="c1">#     %add : Tensor = call_function[target=operator.add](args=(%x, %y))</span>
+<span class="c1">#     %mul : Tensor = call_function[target=operator.mul](args=(%add, 2))</span>
+<span class="c1">#     %relu : Tensor = call_method[target=&#39;relu&#39;](args=(%mul,))</span>
+<span class="c1">#     return relu</span>
+
+<span class="c1"># 查看生成的代码</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">traced</span><span class="o">.</span><span class="n">code</span><span class="p">)</span>
+<span class="c1"># def forward(self, x, y):</span>
+<span class="c1">#     add = x + y</span>
+<span class="c1">#     mul = add * 2</span>
+<span class="c1">#     relu = mul.relu()</span>
+<span class="c1">#     return relu</span>
+
+<span class="c1"># 直接执行</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">traced</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+</code></pre></div></p>
+<h3 id="fx_1">FX 是后续所有优化的基础</h3>
+<ul>
+<li>AOTAutograd 接收 FX</li>
+<li>TorchInductor 接收 FX</li>
+<li>Pattern rewrite / fusion 都基于 FX</li>
+</ul>
+<h2 id="cuda-graph">cuda graph</h2>
+<p>CUDA Graph = 把一整段 GPU kernel launch + memcpy 操作，录制成一个图，然后一次性提交给 GPU 执行。CUDA Graph 不关心 “kernel是 relu 还是 gelu”。 它只关心 “第 1 个 kernel → 第 2 个 kernel → 第 3 个 kernel”</p>
+<h3 id="fx-graph-cuda-graph">FX Graph 和 CUDA Graph</h3>
+<div class="highlight"><pre><span></span><code><span class="n">PyTorch</span> <span class="n">Python</span>
+   <span class="err">↓</span>
+<span class="n">FX</span> <span class="n">Graph</span>          <span class="err">←</span> <span class="n">torch</span><span class="o">.</span><span class="n">compile</span> <span class="o">/</span> <span class="n">Dynamo</span>
+   <span class="err">↓</span>
+<span class="n">Inductor</span> <span class="o">/</span> <span class="n">Triton</span>
+   <span class="err">↓</span>
+<span class="n">CUDA</span> <span class="n">kernels</span>
+   <span class="err">↓</span>
+<span class="n">CUDA</span> <span class="n">Graph</span>        <span class="err">←</span> <span class="n">vLLM</span> <span class="n">capture</span>
+</code></pre></div>
+<h2 id="cumemallocator">CuMemAllocator</h2>
+<p>CuMemAllocator 负责管理一套 可 offload 的 CUDA 内存池,其作用是：
+1. 在特定代码段（memory pool）内分配 CUDA 内存
+2. 可以在 sleep 时把这些内存 offload 到 CPU
+3. 再在 wake_up 时恢复回 GPU（根据 tag）</p>
+<p>这个类里有一个非常重要的属性：<br />
+self.pointer_to_data: dict[int, AllocationData] = {}<br />
+它是一个 字典（map），键为指针地址（GPU 内存地址），值是 AllocationData 结构体，包含和这块内存相关的元数据（tag 和 CPU 备份）。<br />
+<div class="highlight"><pre><span></span><code><span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">AllocationData</span><span class="p">:</span>
+    <span class="n">handle</span><span class="p">:</span> <span class="n">HandleType</span>
+    <span class="n">tag</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">cpu_backup_tensor</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>  
+</code></pre></div>
+handle: 是库内部用来表示内存段的信息（通常包含 CUDA 内存句柄、大小、地址等）
+tag: 一个 字符串标记内存属于哪类用途
+cpu_backup_tensor: 如果这块内存在 sleep 时 offload 到 CPU，这里会保存一份备份 tensor</p>
+<p>gpu_worker代码中只有kv cache和weight会在memory pool的context下进行分配，并分别赋予weights和kv_cache的tag。所以self.pointer_to_data也只存了这两个。根据前面的实验，他们占据91255M-5921M大小显存</p>
+<h3 id="5921m">5921M显存的构成</h3>
+<ol>
+<li>CUDA Context + Driver Runtime（进程一启动就存在，不可释放）</li>
+<li>CUDA Driver context</li>
+<li>cuBLAS / cuDNN / cuBLASLt workspace</li>
+<li>CUDA Graph / stream / event</li>
+<li>NCCL communicator（即使单卡也有）</li>
+<li>vLLM ModelRunner 常驻结构</li>
+<li>即使权重被 offload，这些仍然常驻 GPU：</li>
+<li>embedding 输出 buffer</li>
+<li>logits buffer</li>
+<li>layernorm 中间 buffer</li>
+<li>attention 临时张量 shape cache</li>
+<li>rotary embedding cache（部分实现）</li>
+<li>CUDA Graph Capture &amp; Replay Buffers（一次capture，长期驻留）</li>
+<li>graph capture buffer</li>
+<li>static input/output buffers</li>
+<li>replay workspace</li>
+</ol>
+<h2 id="prompt">参考&amp;&amp;prompt</h2>
+<p>https://zhuanlan.zhihu.com/p/1968068966934095005
+「详细阅读这篇文章，帮我做一个总结，我需要知道 torch.compile 的原理」<br />
+「FX Graph 是 TorchDynamo 的输出产物，也是后续所有优化的基础。理解 FX 对于理解整个编译流水线至关重要。这句话中，fx 是什么意思」<br />
+「FX Graph 和 vllm 启动服务时的 log 中 Capturing CUDA graphs (mixed prefill-decode, PIECEWISE)
+是一个东西吗？」<br />
+「fx graph 的断裂对 cuda graph 有影响吗」  </p>
+<p>https://github.com/vllm-project/production-stack/issues/391<br />
+详细查看这个链接，告诉我它的具体内容<br />
+链接中提到的 the Production Stack router 是什么？<br />
+根据这段介绍一下 vLLM Production Stack project 是个什么项目   </p>
+<p>https://github.com/vllm-project/vllm/blob/main/vllm/v1/executor/abstract.py<br />
+阅读链接代码，详细解释一下 executor 类和 collective_rpc 函数<br />
+我在运行代码时确认代码会流向这个函数，请问如何在该函数中插入代码记录并输出进入这个函数之前的整个调用流程<br />
+用 VS Code Remote Container（专业）具体怎么操作  </p>
+<p>https://github.com/vllm-project/vllm/blob/main/vllm/device_allocator/cumem.py<br />
+精读链接的代码，我好奇 self.pointer_to_data 是怎么初始化的，以及会存储什么数据<br />
+我通过启动 vllm 服务并且进行 sleep 和 wake 操作的时候观察占据显存的大小，发现服务启动后占据 91255M，然后 sleep 操作会卸载权重和 kv cache，此时仍占据 5921M。我能看到权重和 kv_cache 是在 memory pool 的 context 下分配的，现在我好奇剩下的 5921M 显存的存储内容是什么以及对应的内存分配代码在哪里？<br />
+那么 wake 后，torch.compile 生成的 fx graph 不需要通过读取 cache 重新加载进来吗？<br />
+我的理解是模型 wake 之后的状态就相当于重新加载了，但是重新加载的模型会做一次 torch.compile，那 wake 之后的模型怎么知道去哪里寻找 torch.compile 得到的产物？<br />
+解释你说的 callable + kernel code 是什么？为什么说它们是 python 对象？vLLM 的权重 / KV cache tensor 指针绑定到这些 callable 上是什么意思？  </p>
+<h2 id="todo">todo</h2>
+<p>权重加载的缓存命中？
+唤醒过程中：compile/load graph/graph capture/warm的操作怎么省略的
+5921M显存的分配过程，以及存储内容
+启动vllm服务后，除了kv cache和权重有显存占用还有什么地方
+以下这些占用吗？如果占用，显存分配代码在哪里？
+2. 进程初始化  <br />
+3. 内存分配器设置<br />
+4. CUDA图捕获<br />
+5. GPU内核JIT编译
+FX graph断裂和cuda graph断裂
+torch.compile生成的fx graph不占用显存</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "content.code.copy"], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+    
+  </body>
+</html>
