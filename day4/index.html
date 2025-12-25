@@ -9,10 +9,8 @@
       
       
       
-        <link rel="prev" href="../day0/">
+        <link rel="prev" href="../day3/">
       
-      
-        <link rel="next" href="../day2/">
       
       
         
@@ -23,7 +21,7 @@
     
     
       
-        <title>Day1 - LLM HPC Internship Notes</title>
+        <title>sleep与torch.compile的关联 - LLM HPC Internship Notes</title>
       
     
     
@@ -64,7 +62,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#_1" class="md-skip">
+        <a href="#sleeptorchcompile" class="md-skip">
           跳转至
         </a>
       
@@ -98,7 +96,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Day1
+              sleep与torch.compile的关联
             
           </span>
         </div>
@@ -207,11 +205,9 @@
   
   
   
-    
   
-  
-    <li class="md-tabs__item md-tabs__item--active">
-      <a href="./" class="md-tabs__link">
+    <li class="md-tabs__item">
+      <a href="../day1/" class="md-tabs__link">
         
   
   
@@ -266,9 +262,11 @@
   
   
   
+    
   
-    <li class="md-tabs__item">
-      <a href="../day4/" class="md-tabs__link">
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
         
   
   
@@ -372,19 +370,10 @@
       
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../day1/" class="md-nav__link">
         
   
   
@@ -400,7 +389,6 @@
   
 
       </a>
-      
     </li>
   
 
@@ -463,10 +451,37 @@
       
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../day4/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    sleep与torch.compile的关联
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -482,6 +497,137 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        问题背景与研究动机
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#today-takeaway" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        关键结论先行（Today Takeaway）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cuda-graphtorchcompile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CUDA Graph阶段&amp;torch.compile 阶段。
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="CUDA Graph阶段&amp;torch.compile 阶段。">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        总结
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#engine-initengine-warm-up" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engine init&amp;Engine warm-up
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Engine init&amp;Engine warm-up">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        总结
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#qa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        QA
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prompt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        prompt记录
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#todo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        todo
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -506,6 +652,125 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        问题背景与研究动机
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#today-takeaway" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        关键结论先行（Today Takeaway）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cuda-graphtorchcompile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CUDA Graph阶段&amp;torch.compile 阶段。
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="CUDA Graph阶段&amp;torch.compile 阶段。">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        总结
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#engine-initengine-warm-up" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engine init&amp;Engine warm-up
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Engine init&amp;Engine warm-up">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        总结
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#qa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        QA
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prompt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        prompt记录
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#todo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        todo
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -521,138 +786,107 @@
 
 
 
-<p>🎯 核心目标：VLLM在线模式冷启动性能测试与优化
-📋 目录
-Docker容器操作</p>
-<p>VLLM服务部署</p>
-<p>冷启动测试</p>
-<p>日志分析</p>
-<p>核心概念</p>
-<p>问题与解决</p>
-<p>今日Prompt记录</p>
-<p>🐳 Docker容器操作
-常用命令
-bash</p>
-<h1 id="_1">容器创建与运行</h1>
-<p>docker run -d --name vllm-container --gpus all -p 8000:8000 镜像名</p>
-<h1 id="_2">进入容器</h1>
-<p>docker exec -it vllm-container bash</p>
-<h1 id="_3">日志查看</h1>
-<p>docker logs -f vllm-container</p>
-<h1 id="_4">停止与删除</h1>
-<p>docker stop vllm-container
-docker rm vllm-container
-解决"stopped jobs"问题
-bash
-jobs -l    # 查看暂停的作业
-fg %1      # 恢复作业到前台
-kill %1    # 终止作业
-exit       # 再次退出
-🚀 VLLM服务部署
-带休眠模式的服务启动
-bash
-export CUDA_VISIBLE_DEVICES="6"
-export VLLM_SERVER_DEV_MODE=1
-vllm serve /mnt/cfs/jingfxiong/models--Qwen--Qwen3-8B \
-  --enable-sleep-mode \
-  --port 8002 \
-  2&gt;&amp;1 | tee server.log
-日志同时输出到终端和文件
-bash</p>
-<h1 id="tee">使用tee命令</h1>
-<p>python script.py 2&gt;&amp;1 | tee output.log</p>
-<h1 id="_5">追加模式</h1>
-<p>python script.py 2&gt;&amp;1 | tee -a output.log
-⏱️ 冷启动测试
-测试步骤
-初始冷启动：从零启动服务，记录总时间</p>
-<p>休眠测试：让服务进入休眠状态，测量休眠时间</p>
-<p>唤醒测试：唤醒服务，测量恢复时间</p>
-<p>重启对比：完全重启服务，对比性能差异</p>
-<p>API端点
-bash</p>
-<h1 id="_6">休眠控制</h1>
-<p>curl -X POST 'http://localhost:8002/sleep?level=1'
-curl -X POST 'http://localhost:8002/wake_up'
-curl 'http://localhost:8002/is_sleeping'</p>
-<h1 id="_7">健康检查</h1>
-<p>curl 'http://localhost:8002/health'</p>
-<h1 id="_8">推理请求</h1>
-<p>curl -X POST http://localhost:8002/v1/completions \
-  -H "Content-Type: application/json" \
-  -d '{"model":"Qwen3-8B","prompt":"Hello","max_tokens":10}'
-📊 日志分析结果
-关键时间节点（Qwen3-8B模型）
-阶段  耗时  说明
-总冷启动时间  96秒 从启动到服务完全就绪
-模型权重加载  51.36秒  主要瓶颈（占53.5%）
-CUDA图捕获 14秒 可复用优化
-引擎初始化   26.97秒  包含多个子过程
-进入休眠(level=1)   8.11秒   释放85.47GiB内存
-从休眠唤醒   0.32秒   CPU缓存有效
-性能对比
-首次冷启动：96秒</p>
-<p>休眠唤醒：8.11秒（休眠）+ 0.32秒（唤醒）= 8.43秒</p>
-<p>性能优势：完全重启耗时是休眠唤醒的 11.4倍</p>
-<p>🧠 核心概念
-VLLM两种运行模式
-离线（批量）模式：最大化吞吐量，适合批处理任务</p>
-<p>在线（交互式）模式：最小化延迟，适合API服务</p>
-<p>冷启动的5个成本项
-显存加载时间：权重复制到GPU</p>
-<p>内存分配器设置：CUDA分配器初始化</p>
-<p>CUDA图捕获：记录执行图</p>
-<p>GPU内核JIT编译：DeepGEMM、FlashInfer等</p>
-<p>缓存预热：首次请求开销</p>
-<p>休眠级别
-level=0：轻度休眠，仅释放KV Cache</p>
-<p>level=1：中度休眠，释放KV Cache和部分权重</p>
-<p>level=2：深度休眠，释放所有GPU内存到CPU</p>
-<p>❓ 问题与解决
-1. 服务启动后404问题
-问题：访问根路径 / 返回404
-原因：VLLM API服务器没有定义根路径
-解决：使用正确的API端点（如 /health、/v1/completions）</p>
+<h1 id="sleeptorchcompile">sleep与torch.compile的关联</h1>
+<h2 id="_1">问题背景与研究动机</h2>
+<p>在分析 vLLM 的 <strong>sleep / wake（休眠 / 唤醒）机制</strong>时，遇到了一个核心现象：
+- wake 之后 <strong>不需要重新执行 torch.compile</strong>
+- 编译产物似乎被“直接复用”
+- 但显存、权重、KV cache 又确实经历了释放与重新绑定
+核心问题随之产生：</p>
+<blockquote>
+<p><strong>wake 之后，模型是如何继续使用 torch.compile 的结果的？</strong></p>
+</blockquote>
+<h2 id="today-takeaway">关键结论先行（Today Takeaway）</h2>
+<blockquote>
+<p><strong>torch.compile 的产物本质上是一个 Python callable 对象</strong><br />
+只要进程不退出，该对象就仍然存在于 Python 堆内存中<br />
+vLLM 的 sleep 并不会销毁 Python 对象，只是解绑 / 重绑底层资源
+因此：
+- ❌ wake ≠ 重新加载模型进程
+- ❌ wake ≠ 重新 torch.compile
+- ✅ wake = 在同一 Python 进程中，继续调用原有 compiled callable</p>
+</blockquote>
+<h2 id="cuda-graphtorchcompile">CUDA Graph阶段&amp;torch.compile 阶段。</h2>
+<p>torch.compile 结束之后，模型已经“编译完成”；<br />
+CUDA Graph 是在“模型 warmup / engine init 阶段”额外做的一次 runtime 级优化。<br />
+torch.compile:模型已经“编译好了”，只是还没被反复执行。然后KV cache 初始化（runtime 准备），为 decode runtime 准备环境。  <br />
+CUDA Graph capture（runtime warmup）：<br />
+此时：<br />
+FX Graph 已不再出现<br />
+torch.compile 已结束<br />
+vLLM 在做的是：<br />
+实际跑一遍 forward / decode<br />
+记录 kernel launch 序列<br />
+生成 CUDA Graph  </p>
+<p>CUDA Graph 是 runtime 依赖的<br />
+CUDA Graph capture 依赖：<br />
+实际 batch size<br />
+实际 seqlen<br />
+实际 KV cache layout<br />
+实际 memory pointer  </p>
+<p>👉 这些在 torch.compile 时 根本不存在</p>
+<h3 id="_2">总结</h3>
+<p>torch.compile 属于“计算生成阶段”，<br />
+CUDA Graph 属于“执行录制阶段”。<br />
+两者是流水线关系，而不是同一阶段；<br />
+vLLM 将 CUDA Graph 放在 engine warmup 中，是工程上唯一合理的选择。  </p>
+<h2 id="engine-initengine-warm-up">Engine init&amp;Engine warm-up</h2>
+<p>Engine init 的核心任务是：触发一次真实 dummy forward，让 torch.compile 把模型“固化成图”<br />
+Engine warm-up 的核心任务是：在已 compile 的前提下，用真实 shape capture CUDA Graph  </p>
+<p>forward → dynamo 跳转，不是模型主动行为，而是 torch.compile 在 Python frame 入口处的拦截<br />
+EngineCore 初始化 → 确定可用显存 → 触发一次完整模型 forward → 顺带完成 torch.compile<br />
+vLLM 的 EngineCore 是一个独立的 Python 子进程<br />
+不是主 vllm serve 进程  </p>
+<h3 id="_3">总结</h3>
+<p>在 EngineCore 启动阶段，vLLM 为了确定 KV cache 显存布局，触发了一次 dummy forward；<br />
+这次 forward 被 vLLM 的 compilation 装饰器包裹，从而触发 torch.compile → FX → Inductor → CUDA kernel 编译；<br />
+编译完成后，vLLM 记录状态并结束 compile 监控。  </p>
+<p>装饰器不是 runtime 触发，而是「类定义完成时」触发<br />
+torch.inference_mode()<br />
+→ 返回一个 decorator<br />
+→ decorator = context_decorator(InferenceMode)<br />
+而 context_decorator 就在：<br />
+torch/utils/_contextlib.py  </p>
+<h2 id="qa">QA</h2>
 <ol>
-<li>容器内无法使用code命令
-问题：bash: code: command not found
-原因：容器内没有安装VSCode
-解决：</li>
+<li>wake时：<br />
+Python 对象仍然是原来的 tensor<br />
+FX Graph / CUDA Graph 绑定的 tensor pointer 也不变  </li>
 </ol>
-<p>bash</p>
-<h1 id="_9">使用容器内置编辑器</h1>
-<p>nano file.txt      # 简单编辑器
-vim file.txt       # 功能强大</p>
-<h1 id="_10">或复制到宿主机编辑</h1>
-<p>docker cp 容器名:/path/file.txt .</p>
-<h1 id="_11">编辑后复制回去</h1>
-<p>docker cp file.txt 容器名:/path/
-3. 工作目录不存在
-问题：使用-w /data但目录不存在
-解决：确保目录存在或通过挂载创建</p>
-<p>bash</p>
-<h1 id="1">方法1：提前创建目录</h1>
-<p>mkdir -p /data</p>
-<h1 id="2">方法2：通过挂载自动创建</h1>
-<p>docker run -v /host/data:/data ...
-📝 今日Prompt记录
-Docker相关
-"我使用ssh连接到一个容器中，现在想利用容器中已经拉取的镜像再创建一个新的容器，请问怎么操作"</p>
-<p>"docker run -d --name new_container your_image解析一下这条命令"</p>
-<p>"然后怎么连接我的容器，停止删除等常见操作"</p>
-<p>"退出不了容器" → 解决stopped jobs问题</p>
-<p>"为什么进入新创容器后自动进入这个文件夹，以及怎么打开查看该容器的文件"</p>
-<p>VLLM概念
-"介绍一下vllm冷启动"</p>
-<p>"vllm的offline和online模式解释"</p>
-<p>"在线模式下如何测试冷启动时间"</p>
-<p>"curl -X POST 'http://localhost:8002/sleep?level=1'解释这个命令的含义"</p>
-<p>日志与测试
-"代码执行结果输出到log"</p>
-<p>"怎么分析这个log得到冷启动花费的总时间和各个模块的时间"</p>
-<p>"修改分析log的代码，使其输出所有时间，然后通过缩进表示每个模块时间的包含关系"</p>
-<p>"这是我的开启睡眠模式的启动脚本，我想在服务开启后接着对比直接睡眠到唤醒相对于重新启动的时间优势，帮我补充脚本"</p>
-<p>"怎么用curl命令让启动的服务重启"</p>
+<p>模型逻辑就像从 CPU 加载回来了一份权重，但： <br />
+Python 层的 FX Graph 并未重新生成<br />
+torch.compile 生成的 callable 仍然是原来的对象  </p>
+<ol>
+<li>
+<p>为什么 FX Graph 不需要 reload？<br />
+因为 FX Graph 里：<br />
+不保存 data_ptr<br />
+不保存显存地址<br />
+只在 执行时 通过 PyTorch dispatcher 访问 tensor  </p>
+</li>
+<li>
+<p>wake时，torch.compile 产物的寻址逻辑<br />
+当你第一次 torch.compile(model.forward) 时：<br />
+Python 会生成 GraphModule<br />
+生成对应的 callable + kernel code<br />
+这些对象在 Python 进程中存在，FX Graph 和 compiled callable 是 独立于 tensor 数据的对象<br />
+vLLM 的权重 / KV cache tensor 指针绑定到这些 callable 上<br />
+sleep/wake 不会删除这些 Python 对象，所以不需要再去“找” compile 产物  </p>
+</li>
+</ol>
+<h2 id="prompt">prompt记录</h2>
+<ol>
+<li>接下来，我要做一个简易实验，启动 vllm 服务，然后 sleep，然后通过环境变量改变 device，观察再次 wake 之后的报错情况，torch.compile 产物和剩余显存在唤醒过程的工作机理，你认为怎么样</li>
+<li>ok，那这个修改 device 的实验可以放弃了。我下一步想要分析 sleep 后的进程，因为 wake 之所以不需要重新 torch.compile，是因为 sleep 后的进程还是可以调用原 python 对象。请告诉我怎么分析  </li>
+<li>这一步“/proc 级别证据”给出的操作是什么意思？以及根据 ps -ef | grep -i vllm 给出的进程信息，给出 attach 到正在 sleep 的 Python 进程的详细操作并解释  </li>
+<li>cat /proc/[pid]/maps 的输出如下（prompt 中包含 maps 输出，代码略）解释以上输出  </li>
+<li>ok 观测下来，sleep 前，sleep 后，wake 后三个状态 vllm 进程不发生变化。通过 ls -l /proc/[pid]/fd 和 /proc/[pid]/maps 观测到三个状态下进程打开的文件描述符和内存映射信息也是一致的。现在请把这三个命令的输出写进一个 txt 中，并给出 txt 的严格比对代码  </li>
+<li>解释 engine init 和 engine warm up 的区别（好像和 cuda graph 与 torch.compile 区别相关）然后解释为什么这两个跳转的代码逻辑 （prompt 中包含调用栈片段，代码略）  </li>
+<li>精读 gpu_model_runner.py 这个链接代码我想知道 profile_run → _dummy_run 的跳转以及 self.model 是怎么跳转到 cuda_graph.py 中 call 的  </li>
+<li>下面这段代码是做什么的?怎么看出来它是 Python 对象,以及为什么 self.compiled_callable(<em>args, </em>*kwargs) 会跳转到 torch/_dynamo/eval_frame.py 的 compile_wrapper（prompt 中包含一整段 torch._dynamo / patch / compiled_callable 的代码，代码略）  </li>
+</ol>
+<h2 id="todo">todo</h2>
+<p>查看torch.compile在vllm的代码实现</p>
 
 
 
